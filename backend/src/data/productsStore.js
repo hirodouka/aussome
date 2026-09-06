@@ -164,7 +164,7 @@ export async function fetchSupabaseProducts() {
   }
 }
 
-export function addProduct(product) {
+export async function addProduct(product) {
   const data = getData();
   const newProduct = {
     id: `prod-${Date.now()}`,
@@ -187,24 +187,27 @@ export function addProduct(product) {
   saveData(data);
 
   if (supabase) {
-    supabase.from('products').insert([{
-      id: newProduct.id,
-      name: newProduct.name,
-      category: newProduct.category,
-      price: newProduct.price,
-      original_price: newProduct.originalPrice,
-      badge: newProduct.badge,
-      is_featured: newProduct.isFeatured,
-      is_flash_sale: newProduct.isFlashSale,
-      rating: newProduct.rating,
-      image: newProduct.image,
-      status: newProduct.status,
-      sizes: newProduct.sizes,
-      colors: newProduct.colors,
-      description: newProduct.description
-    }]).then(({ error }) => {
+    try {
+      const { error } = await supabase.from('products').insert([{
+        id: newProduct.id,
+        name: newProduct.name,
+        category: newProduct.category,
+        price: newProduct.price,
+        original_price: newProduct.originalPrice,
+        badge: newProduct.badge,
+        is_featured: newProduct.isFeatured,
+        is_flash_sale: newProduct.isFlashSale,
+        rating: newProduct.rating,
+        image: newProduct.image,
+        status: newProduct.status,
+        sizes: newProduct.sizes,
+        colors: newProduct.colors,
+        description: newProduct.description
+      }]);
       if (error) console.warn("Supabase Sync (Add):", error.message);
-    });
+    } catch (err) {
+      console.warn("Supabase Exception (Add):", err.message);
+    }
   }
 
   return newProduct;

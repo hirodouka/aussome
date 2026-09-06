@@ -74,9 +74,9 @@ router.get('/products/:id', async (req, res) => {
 });
 
 // Admin: Add Product (Syncs to Supabase + Local DB)
-router.post('/products', (req, res) => {
+router.post('/products', async (req, res) => {
   try {
-    const newProduct = addProduct(req.body);
+    const newProduct = await addProduct(req.body);
     res.status(201).json({ message: 'Product created successfully', product: newProduct });
   } catch (err) {
     res.status(400).json({ error: err.message || 'Failed to create product' });
@@ -84,9 +84,9 @@ router.post('/products', (req, res) => {
 });
 
 // Admin: Edit Product (Syncs to Supabase + Local DB)
-router.put('/products/:id', (req, res) => {
+router.put('/products/:id', async (req, res) => {
   try {
-    const updated = updateProduct(req.params.id, req.body);
+    const updated = await updateProduct(req.params.id, req.body);
     if (!updated) {
       return res.status(404).json({ error: 'Product not found' });
     }
