@@ -1,4 +1,16 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const getApiUrl = (path = '') => {
+  const base = import.meta.env.VITE_API_URL || '/api';
+  const cleanBase = base.endsWith('/') ? base.slice(0, -1) : base;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  if (cleanBase.startsWith('http')) {
+    return `${cleanBase}${cleanPath}`;
+  }
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}${cleanBase}${cleanPath}`;
+  }
+  return `${cleanBase}${cleanPath}`;
+};
+
 const LOCAL_STORAGE_KEY = 'aussomefinds_products_v1';
 const LOCAL_ORDERS_KEY = 'aussomefinds_orders_v1';
 
@@ -37,10 +49,14 @@ export const setLocalOrders = (orders) => {
 };
 
 export async function fetchProducts(params = {}) {
-  const query = new URLSearchParams(params).toString();
-  const url = `${API_BASE_URL}/products${query ? `?${query}` : ''}`;
   try {
-    const res = await fetch(url);
+    const url = new URL(getApiUrl('/products'));
+    Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
+    url.searchParams.append('_t', Date.now());
+    const res = await fetch(url.toString(), {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache' }
+    });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const data = await res.json();
     const serverProducts = data.products || data || [];
@@ -72,7 +88,7 @@ export async function createProduct(productData) {
   };
 
   try {
-    const res = await fetch(`${API_BASE_URL}/products`, {
+    const res = await fetch(getApiUrl('/products'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(productData)
@@ -104,7 +120,7 @@ export async function updateProduct(id, productData) {
   };
 
   try {
-    const res = await fetch(`${API_BASE_URL}/products/${id}`, {
+    const res = await fetch(getApiUrl(`/products/${id}`), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(productData)
@@ -134,7 +150,7 @@ export async function updateProduct(id, productData) {
 
 export async function deleteProduct(id) {
   try {
-    await fetch(`${API_BASE_URL}/products/${id}`, {
+    await fetch(getApiUrl(`/products/${id}`), {
       method: 'DELETE'
     });
   } catch (err) {
@@ -157,7 +173,7 @@ export async function placeOrder(orderData) {
   };
 
   try {
-    const res = await fetch(`${API_BASE_URL}/orders`, {
+    const res = await fetch(getApiUrl('/orders'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newOrder)
@@ -179,7 +195,7 @@ export async function placeOrder(orderData) {
 
 export async function fetchOrders() {
   try {
-    const res = await fetch(`${API_BASE_URL}/orders`);
+    const res = await fetch(getApiUrl('/orders'));
     if (res.ok) {
       const data = await res.json();
       const serverOrders = data.orders || data || [];
@@ -196,7 +212,7 @@ export async function fetchOrders() {
 
 export async function updateOrderStatus(orderId, status, paymentConfirmed = true) {
   try {
-    await fetch(`${API_BASE_URL}/orders/${orderId}`, {
+    await fetch(getApiUrl(`/orders/${orderId}`), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status, paymentConfirmed })
@@ -212,7 +228,7 @@ export async function updateOrderStatus(orderId, status, paymentConfirmed = true
 
 export async function updateProductStatus(productId, status) {
   try {
-    await fetch(`${API_BASE_URL}/products/${productId}`, {
+    await fetch(getApiUrl(`/products/${productId}`), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })

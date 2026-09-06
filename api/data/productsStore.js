@@ -85,13 +85,20 @@ export async function fetchSupabaseProducts() {
 
   if (!supabase) return localProds;
   try {
-    const { data, error } = await supabase.from('products').select('*');
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('id', { ascending: false });
     if (error || !data || data.length === 0) {
       return localProds;
     }
-    const supabaseMap = {};
     const remoteList = data.map(p => {
-      const item = {
+      const mainImage = p.image || "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800&auto=format&fit=crop";
+      const imageArray = (Array.isArray(p.images) && p.images.length > 0)
+        ? p.images
+        : [mainImage];
+
+      return {
         id: p.id,
         name: p.name,
         category: p.category,
@@ -101,25 +108,13 @@ export async function fetchSupabaseProducts() {
         isFeatured: p.is_featured,
         isFlashSale: p.is_flash_sale,
         rating: Number(p.rating || 5.0),
-        image: p.image,
-        images: p.images || (p.image ? [p.image] : []),
+        image: mainImage,
+        images: imageArray,
         status: p.status || 'Available',
         sizes: p.sizes || ["S", "M", "L"],
         colors: p.colors || ["Default"],
         description: p.description || ""
       };
-      supabaseMap[p.id] = item;
-      return item;
-    });
-
-    // When Supabase is active, return Supabase products merged with local multi-image arrays
-    localProds.forEach(lp => {
-      if (lp && lp.id && supabaseMap[lp.id]) {
-        const remoteItem = supabaseMap[lp.id];
-        if (lp.images && Array.isArray(lp.images) && lp.images.length > 0) {
-          remoteItem.images = lp.images;
-        }
-      }
     });
 
     return remoteList;
@@ -162,22 +157,25 @@ export async function addProduct(product) {
         is_featured: newProduct.isFeatured,
         is_flash_sale: newProduct.isFlashSale,
         rating: newProduct.rating,
-        image: newProduct.image,
-        status: newProduct.status,
+        image: newProduct.image || "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800&auto=format&fit=crop",
         sizes: newProduct.sizes,
         colors: newProduct.colors,
         description: newProduct.description
       }]);
-      if (error) console.warn("Supabase Sync (Add):", error.message);
+      if (error) {
+        console.error("Supabase Sync (Add Error):", error.message);
+        throw new Error(`Supabase insert failed: ${error.message}`);
+      }
     } catch (err) {
-      console.warn("Supabase Exception (Add):", err.message);
+      console.error("Supabase Exception (Add):", err.message);
+      throw err;
     }
   }
 
   return newProduct;
 }
 
-export function updateProduct(id, updatedFields) {
+export async function updateProduct(id, updatedFields) {
   const data = getData();
   const index = data.products.findIndex(p => p.id === id);
   if (index === -1) return null;
@@ -195,20 +193,28 @@ export function updateProduct(id, updatedFields) {
 
   if (supabase) {
     const p = data.products[index];
-    supabase.from('products').update({
-      name: p.name,
-      category: p.category,
-      price: p.price,
-      original_price: p.originalPrice,
-      badge: p.badge,
-      is_featured: p.isFeatured,
-      is_flash_sale: p.isFlashSale,
-      image: p.image,
-      status: p.status,
-      description: p.description
-    }).eq('id', id).then(({ error }) => {
-      if (error) console.warn("Supabase Sync (Update):", error.message);
-    });
+    try {
+      const { error } = await supabase.from('products').update({
+        name: p.name,
+        category: p.category,
+        price: p.price,
+        original_price: p.originalPrice,
+        badge: p.badge,
+        is_featured: p.isFeatured,
+        is_flash_sale: p.isFlashSale,
+        image: p.image || "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800&auto=format&fit=crop",
+        sizes: p.sizes,
+        colors: p.colors,
+        description: p.description
+      }).eq('id', id);
+      if (error) {
+        console.error("Supabase Sync (Update Error):", error.message);
+        throw new Error(`Supabase update failed: ${error.message}`);
+      }
+    } catch (err) {
+      console.error("Supabase Exception (Update):", err.message);
+      throw err;
+    }
   }
 
   return data.products[index];

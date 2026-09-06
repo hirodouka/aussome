@@ -36,6 +36,7 @@ router.get('/categories', (req, res) => {
 
 // Products: List with filter & search (Connected to Supabase)
 router.get('/products', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   const { category, search, featured, flash_sale } = req.query;
   let list = await fetchSupabaseProducts();
 
