@@ -97,12 +97,16 @@ router.put('/products/:id', async (req, res) => {
 });
 
 // Admin: Delete Product (Syncs to Supabase + Local DB)
-router.delete('/products/:id', (req, res) => {
-  const success = deleteProduct(req.params.id);
-  if (!success) {
-    return res.status(404).json({ error: 'Product not found' });
+router.delete('/products/:id', async (req, res) => {
+  try {
+    const success = await deleteProduct(req.params.id);
+    if (!success) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    res.json({ message: 'Product deleted successfully', id: req.params.id });
+  } catch (err) {
+    res.status(400).json({ error: err.message || 'Failed to delete product' });
   }
-  res.json({ message: 'Product deleted successfully', id: req.params.id });
 });
 
 // Journal / Blog articles

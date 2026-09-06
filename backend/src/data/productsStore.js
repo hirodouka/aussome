@@ -216,20 +216,22 @@ export function updateProduct(id, updatedFields) {
   return data.products[index];
 }
 
-export function deleteProduct(id) {
+export async function deleteProduct(id) {
   const data = getData();
   const initialLength = data.products.length;
   data.products = data.products.filter(p => p.id !== id);
-  if (data.products.length !== initialLength) {
-    saveData(data);
-    if (supabase) {
-      supabase.from('products').delete().eq('id', id).then(({ error }) => {
-        if (error) console.warn("Supabase Sync (Delete):", error.message);
-      });
+  
+  if (supabase) {
+    try {
+      const { error } = await supabase.from('products').delete().eq('id', id);
+      if (error) console.warn("Supabase Sync (Delete):", error.message);
+    } catch (err) {
+      console.warn("Supabase Exception (Delete):", err.message);
     }
-    return true;
   }
-  return false;
+
+  saveData(data);
+  return true;
 }
 
 export function getOrders() {

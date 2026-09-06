@@ -196,12 +196,23 @@ export default function AdminModal({ isOpen, onClose, products, onRefreshProduct
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this item?')) return;
+  const [deleteConfirmProduct, setDeleteConfirmProduct] = useState(null);
+
+  const requestDelete = (product) => {
+    setDeleteConfirmProduct(product);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirmProduct) return;
+    const target = deleteConfirmProduct;
+    setDeleteConfirmProduct(null);
     setLoading(true);
     try {
-      await deleteProduct(id);
+      setLocalProducts((prev) => prev.filter((p) => p.id !== target.id));
+      await deleteProduct(target.id);
       if (onRefreshProducts) await onRefreshProducts();
+      setStatusMsg(`"${target.name || 'Product'}" has been permanently deleted!`);
+      setTimeout(() => setStatusMsg(null), 2500);
     } catch (err) {
       console.error(err);
     } finally {
@@ -374,7 +385,7 @@ export default function AdminModal({ isOpen, onClose, products, onRefreshProduct
                         <Edit size={14} />
                       </button>
                       <button
-                        onClick={() => handleDelete(p.id)}
+                        onClick={() => requestDelete(p)}
                         style={{ padding: '6px 10px', background: '#FEE2E2', color: '#EF4444', borderRadius: '4px' }}
                         title="Delete Item"
                       >
@@ -1028,6 +1039,99 @@ export default function AdminModal({ isOpen, onClose, products, onRefreshProduct
                   style={{ padding: '10px 24px', borderRadius: '6px', background: '#EA580C', color: '#FFF', fontWeight: 700 }}
                 >
                   Crop & Apply Image
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Custom Confirmation Dialog for Product Deletion */}
+        {deleteConfirmProduct && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              background: 'rgba(0, 0, 0, 0.65)',
+              display: 'flex',
+              alignItems: 'center',
+              justify: 'center',
+              backdropFilter: 'blur(4px)',
+              padding: '20px'
+            }}
+            onClick={() => setDeleteConfirmProduct(null)}
+          >
+            <div
+              style={{
+                background: '#FFFFFF',
+                borderRadius: '12px',
+                padding: '28px 24px',
+                maxWidth: '420px',
+                width: '100%',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                textAlign: 'center'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div
+                style={{
+                  width: '54px',
+                  height: '54px',
+                  borderRadius: '50%',
+                  background: '#FEE2E2',
+                  color: '#DC2626',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 16px'
+                }}
+              >
+                <Trash2 size={26} />
+              </div>
+
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', marginBottom: '8px' }}>
+                Delete Listing Confirmation
+              </h3>
+
+              <p style={{ fontSize: '0.9rem', color: '#4B5563', lineHeight: 1.5, marginBottom: '20px' }}>
+                Are you sure you want to delete <strong style={{ color: '#111827' }}>"{deleteConfirmProduct.name}"</strong>? This will remove the listing from both the Admin Portal and Customer Store.
+              </p>
+
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                <button
+                  type="button"
+                  onClick={() => setDeleteConfirmProduct(null)}
+                  style={{
+                    flex: 1,
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    border: '1px solid #D1D5DB',
+                    background: '#F9FAFB',
+                    color: '#374151',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  style={{
+                    flex: 1,
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: '#DC2626',
+                    color: '#FFFFFF',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    boxShadow: '0 4px 12px rgba(220, 38, 38, 0.3)'
+                  }}
+                >
+                  Yes, Delete Item
                 </button>
               </div>
             </div>
