@@ -11,44 +11,10 @@ import Footer from './components/Footer';
 import { fetchProducts, deleteProduct } from './services/api';
 import { Search, X, Plus } from 'lucide-react';
 
-const INITIAL_FALLBACK_PRODUCTS = [
-  {
-    id: "prod-1788672951533",
-    name: "Zara Man Slim Fit Checked Long Sleeve Shirt",
-    category: "Clothing",
-    price: 500.00,
-    originalPrice: 600.00,
-    badge: "New",
-    isFeatured: true,
-    isFlashSale: false,
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?q=80&w=800&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=800&auto=format&fit=crop"
-    ],
-    description: "Zara Man Shirt - Slim Fit - Color: White with Red & Navy Check Pattern - Long Sleeves - Button-Up Front - Made in Turkey - Ideal for Smart Casual Outfits"
-  },
-  {
-    id: "prod-1788672951534",
-    name: "Penguin Heritage Slim Fit Button Up Shirt",
-    category: "Clothing",
-    price: 700.00,
-    badge: "New",
-    isFeatured: true,
-    isFlashSale: false,
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=800&auto=format&fit=crop"
-    ],
-    description: "Original Penguin Heritage Slim Fit Button-Up Shirt - Unique all-over print featuring penguins and palm trees - Convenient chest pocket - Ideal for casual wear - Made in China"
-  }
-];
+const INITIAL_FALLBACK_PRODUCTS = [];
 
 export default function App() {
-  const [products, setProducts] = useState(INITIAL_FALLBACK_PRODUCTS);
+  const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
   const [cartItems, setCartItems] = useState([]);
   const [wishlistIds, setWishlistIds] = useState([]);
