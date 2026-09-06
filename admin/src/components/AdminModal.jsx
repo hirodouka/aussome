@@ -210,6 +210,11 @@ export default function AdminModal({ isOpen, onClose, products, onRefreshProduct
     try {
       setLocalProducts((prev) => prev.filter((p) => p.id !== target.id));
       await deleteProduct(target.id);
+      const cached = (typeof window !== 'undefined' && localStorage.getItem('aussomefinds_products_v1')) 
+        ? JSON.parse(localStorage.getItem('aussomefinds_products_v1')) 
+        : [];
+      const updatedCache = cached.filter((p) => p.id !== target.id);
+      localStorage.setItem('aussomefinds_products_v1', JSON.stringify(updatedCache));
       if (onRefreshProducts) await onRefreshProducts();
       setStatusMsg(`"${target.name || 'Product'}" has been permanently deleted!`);
       setTimeout(() => setStatusMsg(null), 2500);
