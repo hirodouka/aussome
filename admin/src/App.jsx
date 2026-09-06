@@ -81,12 +81,18 @@ export default function App() {
     if (!deleteConfirmProduct) return;
     const targetId = deleteConfirmProduct.id;
     setDeleteConfirmProduct(null);
+    setProducts((prev) => prev.filter((p) => p.id !== targetId));
     try {
-      setProducts((prev) => prev.filter((p) => p.id !== targetId));
       await deleteProduct(targetId);
+      // Update local cache state immediately
+      const cached = (typeof window !== 'undefined' && localStorage.getItem('aussomefinds_products_v1')) 
+        ? JSON.parse(localStorage.getItem('aussomefinds_products_v1')) 
+        : [];
+      const updatedCache = cached.filter((p) => p.id !== targetId);
+      localStorage.setItem('aussomefinds_products_v1', JSON.stringify(updatedCache));
       await loadProducts(activeCategory);
     } catch (err) {
-      console.error(err);
+      console.error('Delete product error:', err);
     }
   };
 
