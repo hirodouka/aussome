@@ -9,7 +9,7 @@ import CartDrawer from './components/CartDrawer';
 import AdminModal from './components/AdminModal';
 import Footer from './components/Footer';
 import { fetchProducts, deleteProduct } from './services/api';
-import { Search, X, Plus } from 'lucide-react';
+import { Search, X, Plus, Trash2 } from 'lucide-react';
 
 const INITIAL_FALLBACK_PRODUCTS = [];
 

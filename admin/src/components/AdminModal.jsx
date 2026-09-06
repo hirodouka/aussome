@@ -275,7 +275,7 @@ export default function AdminModal({ isOpen, onClose, products, onRefreshProduct
                 color: activeTab === 'list' ? '#FFF' : '#111'
               }}
             >
-              All Products ({products.length})
+              All Products ({(products || []).length})
             </button>
 
             <button
