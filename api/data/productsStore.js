@@ -89,8 +89,12 @@ export async function fetchSupabaseProducts() {
       .from('products')
       .select('*')
       .order('id', { ascending: false });
-    if (error || !data || data.length === 0) {
+    if (error) {
+      console.error("Supabase fetch error:", error.message);
       return localProds;
+    }
+    if (!data || data.length === 0) {
+      return [];
     }
     const remoteList = data.map(p => {
       const mainImage = p.image || "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800&auto=format&fit=crop";
