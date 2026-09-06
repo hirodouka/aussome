@@ -337,7 +337,7 @@ export default function App() {
             </h3>
 
             <p style={{ fontSize: '0.9rem', color: '#4B5563', lineHeight: 1.5, marginBottom: '20px' }}>
-              Are you sure you want to delete <strong style={{ color: '#111827' }}>"{deleteConfirmProduct.name}"</strong>? This will permanently remove the item from the catalog.
+              Are you sure you want to delete <strong style={{ color: '#111827' }}>"{deleteConfirmProduct?.name || 'this product'}"</strong>? This will permanently remove the item from the catalog.
             </p>
 
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>

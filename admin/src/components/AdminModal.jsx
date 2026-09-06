@@ -1094,7 +1094,7 @@ export default function AdminModal({ isOpen, onClose, products, onRefreshProduct
               </h3>
 
               <p style={{ fontSize: '0.9rem', color: '#4B5563', lineHeight: 1.5, marginBottom: '20px' }}>
-                Are you sure you want to delete <strong style={{ color: '#111827' }}>"{deleteConfirmProduct.name}"</strong>? This will remove the listing from both the Admin Portal and Customer Store.
+                Are you sure you want to delete <strong style={{ color: '#111827' }}>"{deleteConfirmProduct?.name || 'this product'}"</strong>? This will remove the listing from both the Admin Portal and Customer Store.
               </p>
 
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
