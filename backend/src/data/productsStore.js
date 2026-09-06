@@ -108,23 +108,17 @@ export async function fetchSupabaseProducts() {
       return item;
     });
 
-    // Merge: Include local products from products.json that are not in Supabase yet
-    const combined = [...remoteList];
+    // When Supabase is active, return Supabase products merged with local multi-image arrays
     localProds.forEach(lp => {
-      if (lp && lp.id) {
-        if (!supabaseMap[lp.id]) {
-          combined.unshift(lp);
-        } else {
-          // Always preserve local multi-photo images array if available
-          const remoteItem = supabaseMap[lp.id];
-          if (lp.images && Array.isArray(lp.images) && lp.images.length > 0) {
-            remoteItem.images = lp.images;
-          }
+      if (lp && lp.id && supabaseMap[lp.id]) {
+        const remoteItem = supabaseMap[lp.id];
+        if (lp.images && Array.isArray(lp.images) && lp.images.length > 0) {
+          remoteItem.images = lp.images;
         }
       }
     });
 
-    return combined;
+    return remoteList;
   } catch (err) {
     return localProds;
   }
