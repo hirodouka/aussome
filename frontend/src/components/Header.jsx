@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Search, Menu, X, ShieldCheck } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X } from 'lucide-react';
 
 export default function Header({
   cartCount,
   wishlistCount,
   onOpenCart,
-  onOpenAdmin,
   activeCategory,
   onSelectCategory,
   onOpenSearch

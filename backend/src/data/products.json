@@ -1,58 +1,6 @@
 {
   "products": [
     {
-      "id": "prod-1788689207984",
-      "name": "TEST2",
-      "category": "Clothing",
-      "price": 191,
-      "originalPrice": 191,
-      "badge": "New",
-      "isFeatured": true,
-      "isFlashSale": false,
-      "rating": 5,
-      "image": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800&auto=format&fit=crop",
-      "images": [
-        "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800&auto=format&fit=crop"
-      ],
-      "status": "Available",
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        "Default"
-      ],
-      "description": "High quality product."
-    },
-    {
-      "id": "prod-1788688602431",
-      "name": "Test",
-      "category": "Clothing",
-      "price": 999,
-      "originalPrice": 999,
-      "badge": "New",
-      "isFeatured": true,
-      "isFlashSale": false,
-      "rating": 5,
-      "image": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800&auto=format&fit=crop",
-      "images": [
-        "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800&auto=format&fit=crop"
-      ],
-      "status": "Available",
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        "Default"
-      ],
-      "description": "High quality product."
-    },
-    {
       "id": "prod-1788679210197",
       "name": "Adidas Black Sneakers",
       "category": "Clothing",

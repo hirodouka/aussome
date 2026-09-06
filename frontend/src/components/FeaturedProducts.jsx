@@ -1,13 +1,12 @@
 import React from 'react';
-import { Eye, ShoppingCart, Heart, ArrowRight, Edit } from 'lucide-react';
+import { Eye, ShoppingCart, ArrowRight } from 'lucide-react';
 
 export default function FeaturedProducts({
   products,
   onAddToCart,
   onQuickView,
   onToggleWishlist,
-  wishlistIds,
-  onEditProduct
+  wishlistIds
 }) {
   return (
     <section className="container" style={{ marginTop: '60px' }}>
