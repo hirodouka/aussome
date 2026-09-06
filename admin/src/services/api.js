@@ -51,14 +51,14 @@ export const fetchProducts = async (params = {}) => {
   } catch (err) {
     console.warn('Backend API offline or unreachable, using local storage cache:', err.message);
     const cached = getLocalProducts();
-    if (cached && Array.isArray(cached) && cached.length > 0) {
+    if (cached && Array.isArray(cached)) {
       const validProducts = cached.filter(p => p && p.id && p.name);
       if (params.category && params.category !== 'All') {
         return validProducts.filter((p) => p.category && p.category.toLowerCase() === params.category.toLowerCase());
       }
       return validProducts;
     }
-    return null;
+    return [];
   }
 };
 
