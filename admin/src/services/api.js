@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const LOCAL_STORAGE_KEY = 'aussomefinds_products_v1';
 const LOCAL_ORDERS_KEY = 'aussomefinds_orders_v1';
 
