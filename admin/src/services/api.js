@@ -158,13 +158,16 @@ export const updateProduct = async (id, productData) => {
 
 export const deleteProduct = async (id) => {
   try {
-    await fetch(`${API_BASE}/products/${id}`, { method: 'DELETE' });
+    const res = await fetch(`${API_BASE}/products/${id}`, { method: 'DELETE' });
+    if (!res.ok) {
+      console.error('Delete request returned status:', res.status);
+    }
   } catch (err) {
-    console.warn('Backend DELETE failed, deleting locally:', err);
+    console.warn('Backend DELETE request failed:', err);
   }
 
   const cached = getLocalProducts() || [];
-  const updated = cached.filter((p) => p.id !== id);
+  const updated = cached.filter((p) => p && p.id !== id);
   setLocalProducts(updated);
   return { success: true, id };
 };
