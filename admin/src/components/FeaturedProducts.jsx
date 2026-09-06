@@ -75,7 +75,7 @@ export default function FeaturedProducts({
 
                   <button
                     className="action-pill-btn"
-                    onClick={() => onDeleteProduct(product.id)}
+                    onClick={() => onDeleteProduct(product)}
                     title="Delete Product"
                     style={{ background: '#FEE2E2', color: '#EF4444' }}
                   >
