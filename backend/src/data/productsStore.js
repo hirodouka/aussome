@@ -70,8 +70,12 @@ export function getData() {
 }
 
 export function saveData(data) {
-  ensureFileExists();
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  try {
+    ensureFileExists();
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('Serverless environment file write skipped:', err.message);
+  }
 }
 
 // Supabase Async Operations with Local JSON Sync
